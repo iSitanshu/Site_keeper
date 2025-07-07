@@ -1,10 +1,24 @@
-"use client"
+"use client";
 import React, { useContext, useEffect, useState } from "react";
 
 const LoginPopup = () => {
-    const handleSubmit = () => {}
-    const [currState, setCurrState] = useState("Sign Up");
-
+  const [currState, setCurrState] = useState("Sign Up");
+  const [userRegister, setUserRegister] = useState({
+    username: "",
+    email: "",
+    password: ""
+  })
+  const handleSubmit = () => {
+    console.log("Current User is - ",userRegister);
+  };
+  const changeState = () => {
+    if (currState === "Sign Up") setCurrState("Login");
+    if (currState === "Login") setCurrState("Sign Up");
+  };
+  
+  const handleChange = (e:any) => {
+    setUserRegister({...userRegister, [e.target.name]: e.target.value })
+  }
 
   return (
     <div className="fixed inset-0 flex flex-col gap-6 items-center justify-center bg-gray-900 bg-opacity-60 z-50">
@@ -30,6 +44,7 @@ const LoginPopup = () => {
               name="username"
               placeholder="Your name"
               required
+              onChange={handleChange}
               className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           )}
@@ -38,6 +53,7 @@ const LoginPopup = () => {
             name="email"
             placeholder="Your Email"
             required
+            onChange={handleChange}
             className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
@@ -45,6 +61,7 @@ const LoginPopup = () => {
             name="password"
             placeholder="Enter the Password"
             required
+            onChange={handleChange}
             className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
@@ -70,6 +87,7 @@ const LoginPopup = () => {
               Create a new account?{" "}
               <span
                 className="text-green-800 font-semibold cursor-pointer hover:underline"
+                onClick={() => changeState()}
               >
                 Click here
               </span>
@@ -79,6 +97,7 @@ const LoginPopup = () => {
               Already have an account?{" "}
               <span
                 className="text-green-700 font-semibold cursor-pointer hover:underline"
+                onClick={() => changeState()}
               >
                 Login here
               </span>
