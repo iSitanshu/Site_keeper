@@ -1,4 +1,5 @@
 "use client";
+import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
 
 const LoginPopup = () => {
@@ -8,9 +9,11 @@ const LoginPopup = () => {
     email: "",
     password: ""
   })
-  const handleSubmit = () => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
+    e.preventDefault()
     console.log("Current User is - ",userRegister);
   };
+  
   const changeState = () => {
     if (currState === "Sign Up") setCurrState("Login");
     if (currState === "Login") setCurrState("Sign Up");
@@ -45,7 +48,7 @@ const LoginPopup = () => {
               placeholder="Your name"
               required
               onChange={handleChange}
-              className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="border border-gray-300 text-black px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           )}
           <input
@@ -54,7 +57,7 @@ const LoginPopup = () => {
             placeholder="Your Email"
             required
             onChange={handleChange}
-            className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border border-gray-300 text-black px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <input
             type="password"
@@ -62,7 +65,7 @@ const LoginPopup = () => {
             placeholder="Enter the Password"
             required
             onChange={handleChange}
-            className="border border-gray-300 px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="border border-gray-300 text-black px-4 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -125,3 +128,7 @@ const LoginPopup = () => {
 };
 
 export default LoginPopup;
+function preventDefault() {
+  throw new Error("Function not implemented.");
+}
+
