@@ -12,6 +12,12 @@ const LoginPopup = () => {
   const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault()
     console.log("Current User is - ",userRegister);
+    if(currState === 'Sign Up') {
+      const result = await axios.post('/api/auth/register', userRegister);
+      console.log("yeh hai signup route - ", result)
+    }
+    else { console.log("Yeh too login route hai") }
+
   };
   
   const changeState = () => {
