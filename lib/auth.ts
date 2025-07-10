@@ -57,7 +57,7 @@ export const authOptions: NextAuthOptions = {
   }, // login fail ho to kaha redirect karna hai
   session: {
     strategy: "jwt",
-    maxAge: 30*24*60*60,
+    maxAge: 60 * 30,
   }, // session JWT me store ho ya database me, kitni der tak valid rahe
   secret: process.env.NEXTAUTH_SECRET // JWT ko securely encrypt karne ke liye
 }; 

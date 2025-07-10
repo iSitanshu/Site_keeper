@@ -1,36 +1,64 @@
 "use client";
-import axios from "axios";
+import { addUser } from "@/lib/features/user/userSlice";
+import { useAppDispatch } from "@/lib/hooks";
+import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import React, { useContext, useEffect, useState } from "react";
 
 const LoginPopup = () => {
   const [currState, setCurrState] = useState("Sign Up");
+  const router = useRouter();
   const [userRegister, setUserRegister] = useState({
-    username: "",
+    name: "",
     email: "",
-    password: ""
-  })
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault()
-    console.log("Current User is - ",userRegister);
-    if(currState === 'Sign Up') {
-      const result = await axios.post('/api/auth/register', userRegister);
-      console.log("yeh hai signup route - ", result)
-    }
-    else { console.log("Yeh too login route hai") }
+    password: "",
+  });
+  const dispatch = useAppDispatch();
 
+  const handleSubmit = async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    if (currState === "Sign Up") {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userRegister),
+      });
+      const body = await res.json();
+      if (!res.ok) {
+        console.error("data.error while registering || Something went wrong");
+      } else {
+        setCurrState("Login");
+      }
+    } else {
+      const { email, password } = userRegister;
+
+      const res = await signIn("credentials", {
+        email,
+        password,
+        redirect: false,
+      });
+
+      if (res?.error) {
+        console.error("Error while login - ", res.error);
+      } else {
+        router.push("/"); // redirect on success
+      }
+    }
   };
-  
+
   const changeState = () => {
     if (currState === "Sign Up") setCurrState("Login");
     if (currState === "Login") setCurrState("Sign Up");
   };
-  
-  const handleChange = (e:any) => {
-    setUserRegister({...userRegister, [e.target.name]: e.target.value })
-  }
+
+  const handleChange = (e: any) => {
+    setUserRegister({ ...userRegister, [e.target.name]: e.target.value });
+  };
 
   return (
-    <div className="fixed inset-0 flex flex-col gap-6 items-center justify-center bg-gray-900 bg-opacity-60 z-50">
+    <div className="inset-0 flex flex-col gap-6 items-center justify-center bg-gray-900 bg-opacity-60 z-50">
       <form
         className="bg-white w-[90%] sm:w-[400px] p-6 rounded-2xl shadow-xl relative"
         onSubmit={handleSubmit}
@@ -50,7 +78,7 @@ const LoginPopup = () => {
           {currState === "Sign Up" && (
             <input
               type="text"
-              name="username"
+              name="name"
               placeholder="Your name"
               required
               onChange={handleChange}
@@ -137,4 +165,3 @@ export default LoginPopup;
 function preventDefault() {
   throw new Error("Function not implemented.");
 }
-

@@ -1,23 +1,30 @@
-"use client"
-import { useAppDispatch, useAppSelector } from '@/lib/hooks'
-import { useRouter } from 'next/navigation'
-import React, { useEffect } from 'react'
+"use client";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import React, { useEffect } from "react";
 
 const LandingPage = () => {
-  const user = useAppSelector(state => state.user.user)
-  const router = useRouter()
-
+  const router = useRouter();
+  const { data: session, status } = useSession();
+  
   useEffect(() => {
-    if (!user || user.length === 0) {
-      router.push('/signup')
+    if (status === "unauthenticated") {
+      router.push('/signup');
     }
-  }, [user, router])
+  }, [status, router]);
 
-  return (
-    <div>
-      {/* Your landing page content */}
-    </div>
-  )
-}
+  if (status === "loading") {
+    return <p>Loading...</p>;
+  }
 
-export default LandingPage
+  if (!session) {
+    return null;
+  }
+
+  console.log("y hai sesionmein - ", session.user)
+
+  return <div>DashBoard, Welcome</div>;
+};
+
+export default LandingPage;
