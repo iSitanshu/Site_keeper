@@ -1,8 +1,12 @@
 import React from 'react'
 
-const Playlist = () => {
+interface PlaylistProps {
+  userId: string;
+}
+
+const Playlist: React.FC<PlaylistProps> = ({ userId }) => {
   return (
-    <div>Playlist</div>
+    <div>Playlist {userId}</div>
   )
 }
 
