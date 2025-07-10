@@ -26,8 +26,6 @@ const PlaylistForm = () => {
       return;
     }
 
-    
-
     try {
       const payload = {
         title: playlistName,
