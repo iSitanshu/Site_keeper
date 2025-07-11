@@ -11,11 +11,18 @@ const colorThemes = [
   { name: 'YouTube Red', color: 'bg-red-600' },
   { name: 'Purple', color: 'bg-violet-400' },
 ];
+const selectTags = [
+  {name: 'Learning'},
+  {name: 'Coding'},
+  {name: 'Music'},
+  {name: 'Creating'}
+]
 
 const PlaylistForm = () => {
   const [playlistName, setPlaylistName] = useState('');
   const [description, setDescription] = useState('');
   const [selectedColor, setSelectedColor] = useState('Primary');
+  const [tags, setTags] = useState('Learning')
   const dispatch = useAppDispatch();
 
   const handlePlaylistSubmission = async (e: React.FormEvent) => {
@@ -31,6 +38,8 @@ const PlaylistForm = () => {
         title: playlistName,
         description,
         themeColor: selectedColor,
+        tags,
+        
       };
 
       await axios.post('/api/playlist', payload); // replace with your actual backend route
@@ -46,7 +55,7 @@ const PlaylistForm = () => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50 backdrop-filter backdrop-blur-sm">
       <form
         onSubmit={handlePlaylistSubmission}
         className="bg-white rounded-xl shadow-lg w-[400px] p-6"
@@ -62,6 +71,7 @@ const PlaylistForm = () => {
           placeholder="e.g., Apache Kafka, React Hooks, System Design"
           className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 mb-4"
           value={playlistName}
+          required
           onChange={(e) => setPlaylistName(e.target.value)}
         />
 
@@ -70,6 +80,7 @@ const PlaylistForm = () => {
           placeholder="Brief description of what you'll learn in this playlist..."
           className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300 mb-4 resize-none"
           rows={3}
+          required
           value={description}
           onChange={(e) => setDescription(e.target.value)}
         />
@@ -81,11 +92,27 @@ const PlaylistForm = () => {
               key={theme.name}
               type="button"
               onClick={() => setSelectedColor(theme.name)}
-              className={`rounded-lg p-4 text-white flex justify-center items-center border-2 ${
+              className={`rounded-lg p-2 text-white flex justify-center items-center ${
                 selectedColor === theme.name ? 'ring-2 ring-purple-500' : 'border-transparent'
               } ${theme.color}`}
             >
               {theme.name}
+            </button>
+          ))}
+        </div>
+
+        <label>Select your TAGS🏆</label>
+        <div className='grid grid-cols-3 gap-2 mb-6'>
+          {selectTags.map((currtags) => (
+            <button
+            key={currtags.name}
+            type='button'
+            onClick={() => setTags(currtags.name)}
+            className={`rounded-lg flex justify-center items-center ${
+                tags === currtags.name ? 'ring-2 ring-purple-500' : 'border-transparent'
+              } ${currtags.name}`}
+            >
+              {currtags.name}
             </button>
           ))}
         </div>
