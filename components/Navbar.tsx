@@ -1,11 +1,14 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAppSelector } from "@/lib/hooks";
 
-interface NavbarProps {
-  user: string;
+interface User {
+  name?: string;
+  // add other properties if needed
 }
 
-const NavbarComponent: React.FC<NavbarProps> = ({ user }) => {
+const NavbarComponent = () => {
+  const user = useAppSelector((state: { user: { user: User[] } }) => state.user.user[0])
   return (
     <div className="flex items-center justify-between p-2 bg-white shadow">
       <div className="flex items-center ml-2">
@@ -19,7 +22,7 @@ const NavbarComponent: React.FC<NavbarProps> = ({ user }) => {
       <Avatar className="border border-cyan-400 mr-2">
         <AvatarImage />
         <AvatarFallback className="bg-cyan-600 text-white">
-          {user}
+          {user.name || ''}
         </AvatarFallback>
       </Avatar>
     </div>

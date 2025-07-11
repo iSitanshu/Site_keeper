@@ -7,9 +7,11 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 import NavbarComponent from "@/components/Navbar";
+import { addUser } from "@/lib/features/user/userSlice";
 
 const LandingPage = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch()
   const { data: session, status } = useSession();
 
   useEffect(() => {
@@ -26,13 +28,17 @@ const LandingPage = () => {
     return null;
   }
 
+  if(session){
+    dispatch(addUser(session.user))
+  }  
+
   return (
     <div>
-      <nav><NavbarComponent user={session.user.name ?? ""} /></nav>
+      <nav><NavbarComponent /></nav>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Playlist userId={session.user.id} />
-        <Link userId={session.user.id} />
-        <Note userId={session.user.id} />
+        <Playlist />
+        {/* <Link />
+        <Note /> */}
       </div>
     </div>
   );

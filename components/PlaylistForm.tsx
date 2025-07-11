@@ -1,7 +1,11 @@
 import { changeStatus } from '@/lib/features/status/statusSlice';
-import { useAppDispatch } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import axios from "axios";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
+interface User {
+  id?: string
+}
 
 const colorThemes = [
   { name: 'Primary', color: 'bg-purple-600' },
@@ -20,10 +24,12 @@ const selectTags = [
 
 const PlaylistForm = () => {
   const [playlistName, setPlaylistName] = useState('');
+  const [PlaylistData, setPlaylistData] = useState([])
   const [description, setDescription] = useState('');
   const [selectedColor, setSelectedColor] = useState('Primary');
   const [tags, setTags] = useState('Learning')
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state: {user: {user:User[]}}) => state.user.user[0])
 
   const handlePlaylistSubmission = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,20 +45,34 @@ const PlaylistForm = () => {
         description,
         themeColor: selectedColor,
         tags,
-        
+        userId: user.id
       };
 
-      await axios.post('/api/playlist', payload); // replace with your actual backend route
-
-      dispatch(changeStatus()); // closes the modal
-      setPlaylistName('');
-      setDescription('');
-      setSelectedColor('Primary');
+      const res = await fetch("/api/dashboard/playlist", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+      const body = await res.json();
+      if (!res.ok) {
+        console.error("data.error while registering || Something went wrong");
+      } else {
+        alert('Playlist Created Succcessfully...')
+          dispatch(changeStatus()); 
+          setPlaylistName('');
+          setDescription('');
+          setSelectedColor('Primary');
+      }
     } catch (error) {
       console.error('Error creating playlist:', error);
       alert('Failed to create playlist. Please try again.');
     }
   };
+
+
+
 
   return (
     <div className="fixed inset-0 bg-opacity-40 flex items-center justify-center z-50 backdrop-filter backdrop-blur-sm">
