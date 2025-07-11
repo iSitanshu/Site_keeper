@@ -1,12 +1,9 @@
 import React from 'react'
 
-interface PlaylistProps {
-  userId: string;
-}
 
-const Note: React.FC<PlaylistProps> = ({ userId }) => {
+const Note = () => {
   return (
-    <div>Note {userId}</div>
+    <div>NoteComponent</div>
   )
 }
 

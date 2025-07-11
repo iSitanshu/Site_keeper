@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import statusReducer from './features/status/statusSlice'
 import userReducer from './features/user/userSlice'
+import currentReducer from './features/current/currentSlice'
 
 export const store = () => {
     return configureStore({
         reducer: {
             status: statusReducer,
-            user: userReducer
+            user: userReducer,
+            current: currentReducer
         }
     })
 }

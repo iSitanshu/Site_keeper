@@ -37,8 +37,8 @@ const LandingPage = () => {
       <nav><NavbarComponent /></nav>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <Playlist />
-        {/* <Link />
-        <Note /> */}
+        <Link />
+        <Note />
       </div>
     </div>
   );
