@@ -21,6 +21,7 @@ interface PlaylistInformation {
 const Playlist = () => {
   const [playlistData, setPlaylistData] = useState<PlaylistInformation[]>([]);
   const Playliststatus = useAppSelector((state) => state.status.currentState);
+  const currPlaylist = useAppSelector((state) => state.current.currentPlaylist)
   const dispatch = useAppDispatch();
   const user = useAppSelector(
     (state: { user: { user: User[] } }) => state.user.user[0]
@@ -49,8 +50,9 @@ const Playlist = () => {
   }, [user?.id]);
 
   return (
-    <div className="p-2 mt-2 w-full max-w-md mx-auto border-2 h-[90vh] flex flex-col">
-      {Playliststatus && <PlaylistForm />}
+      <div>
+        {Playliststatus && <PlaylistForm />}
+    <div className="p-4 mt-2 w-full max-w-md mx-auto border-2 h-[90vh] flex flex-col">
 
       {/* Input and Button */}
       <div className="flex flex-col gap-4 mb-6">
@@ -93,19 +95,6 @@ const Playlist = () => {
       ) : (
         <div className="flex flex-col gap-4 max-h-full overflow-y-auto pr-2">
         {playlistData.map((data, idx) => {
-          const borderColor =
-          data.themeColor === "Purple"
-            ? "border-purple-600 bg-purple-50"
-            : data.themeColor === "Learning Blue"
-            ? "border-blue-500 bg-blue-50"
-            : data.themeColor === "Success Green"
-            ? "border-green-500 bg-green-50"
-            : data.themeColor === "Warning Orange"
-            ? "border-orange-500 bg-orange-50"
-            : data.themeColor === "YouTube Red"
-            ? "border-red-500 bg-red-50"
-            : "border-gray-400 bg-gray-100";
-
           const dotColor =
           data.themeColor === "Purple"
             ? "bg-purple-600"
@@ -122,12 +111,17 @@ const Playlist = () => {
           return (
           <div
             key={data.id || idx}
-            className={`relative cursor-pointer flex flex-col gap-2 rounded-xl shadow-sm p-4 border ${borderColor}`}
+            className={`relative cursor-pointer flex flex-col gap-2 rounded-xl shadow-sm p-4 border 
+              ${
+                currPlaylist === data.id
+                  ? "border-purple-500 shadow-md"
+                  : "border-gray-200"
+              }
+              `}
             onClick={() => dispatch(changeCurrentPlaylist(`${data.id}`))}
           >
             {/* Dot */}
             <div className={`absolute top-4 right-4 w-3 h-3 rounded-full ${dotColor}`}></div>
-
             {/* Title */}
             <h2 className="text-lg font-semibold">{data.title}</h2>
 
@@ -163,6 +157,7 @@ const Playlist = () => {
       )}
       </div>
     </div>
+      </div>
   );
 };
 

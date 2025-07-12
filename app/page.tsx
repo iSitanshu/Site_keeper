@@ -35,10 +35,10 @@ const LandingPage = () => {
   return (
     <div>
       <nav><NavbarComponent /></nav>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Playlist />
-        <Link />
-        <Note />
+      <div className="flex gap-4 p-2">
+        <div className="w-3/12"><Playlist /></div>
+        <div className="w-4/12"><Link /></div>
+        <div className="w-5/12"><Note /></div>
       </div>
     </div>
   );

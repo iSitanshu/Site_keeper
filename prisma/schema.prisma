@@ -58,7 +58,7 @@ model Link {
 model Note {
   id String @id @default(cuid())
   text String?
-  imageUrl String?
+  imageUrl String[]?
   createdAt DateTime @default(now())
 
   linkId String

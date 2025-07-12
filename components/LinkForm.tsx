@@ -13,7 +13,7 @@ const LinkForm = () => {
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
   const [description, setDescription] = useState('');
-  const [genre, setGenre] = useState('WEBSITE')
+  const [genre, setGenre] = useState('Website')
   const dispatch = useAppDispatch();
   const currplaylist = useAppSelector((state) => state.current.currentPlaylist)
 
@@ -24,7 +24,7 @@ const LinkForm = () => {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if(!currplaylist){
@@ -32,19 +32,40 @@ const LinkForm = () => {
       return;
     }
 
-    const data = {
-      url: youtubeUrl,
-      customTitle: title,
-      aiTags: tags,
-      customDescription: description || '',
-      genre: genre.toUpperCase(),
-      playlistId: currplaylist
-    };
+    try {
+      const data = {
+        url: youtubeUrl,
+        customTitle: title,
+        aiTags: tags,
+        customDescription: description || '',
+        genre: genre.toUpperCase(),
+        playlistId: currplaylist
+      };
 
-    console.log("Video submitted:", data);
-    // submit via axios if needed
-
-    dispatch(changeLinkStatus()); // close modal
+      const res = await fetch('/api/dashboard/link', {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
+      const body = await res.json();
+      if (!res.ok) {
+        console.error("data.error while add links || Something went wrong");
+      } else {
+        alert('Link added successfully')
+        setYoutubeUrl('')
+        setTitle('')
+        setTags([])
+        setTagInput('')
+        setDescription('')
+        setGenre('Website')
+      dispatch(changeLinkStatus()); 
+    }
+  } catch (error) {
+      console.error('Error adding Links:', error);
+      alert('Failed to add Link. Please try again.');
+    }
   };
 
   return (
