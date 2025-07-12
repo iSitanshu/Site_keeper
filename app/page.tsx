@@ -35,10 +35,10 @@ const LandingPage = () => {
   return (
     <div>
       <nav><NavbarComponent /></nav>
-      <div className="flex gap-4 p-2">
-        <div className="w-3/12"><Playlist /></div>
-        <div className="w-4/12"><Link /></div>
-        <div className="w-5/12"><Note /></div>
+      <div className="flex h-[92vh] gap-4 p-2">
+        <div className="w-3/12 overflow-hidden"><Playlist /></div>
+        <div className="w-4/12 overflow-hidden"><Link /></div>
+        <div className="w-5/12 overflow-hidden"><Note /></div>
       </div>
     </div>
   );
