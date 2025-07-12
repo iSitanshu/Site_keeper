@@ -160,5 +160,4 @@ const CurrentContent = () => {
   );
 };
 
-
 export default CurrentContent;
