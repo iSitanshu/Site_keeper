@@ -1,14 +1,21 @@
 import React, { useState } from 'react';
-import { useAppDispatch } from '@/lib/hooks';
+import { useAppDispatch, useAppSelector } from '@/lib/hooks';
 import { changeLinkStatus, changeStatus } from '@/lib/features/status/statusSlice';
+
+const genreValue = [
+  {name: 'Youtube'},
+  {name: 'Website'}
+]
 
 const LinkForm = () => {
   const [youtubeUrl, setYoutubeUrl] = useState('');
   const [title, setTitle] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState('');
-  const [notes, setNotes] = useState('');
+  const [description, setDescription] = useState('');
+  const [genre, setGenre] = useState('WEBSITE')
   const dispatch = useAppDispatch();
+  const currplaylist = useAppSelector((state) => state.current.currentPlaylist)
 
   const handleAddTag = () => {
     if (tagInput.trim() && !tags.includes(tagInput.trim())) {
@@ -19,11 +26,19 @@ const LinkForm = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if(!currplaylist){
+      alert('Select any playlist before add Links')
+      return;
+    }
+
     const data = {
-      youtubeUrl,
-      title,
-      tags,
-      notes,
+      url: youtubeUrl,
+      customTitle: title,
+      aiTags: tags,
+      customDescription: description || '',
+      genre: genre.toUpperCase(),
+      playlistId: currplaylist
     };
 
     console.log("Video submitted:", data);
@@ -90,14 +105,32 @@ const LinkForm = () => {
           ))}
         </div>
 
-        <label className="block text-sm font-medium mb-1">Initial Notes (Optional)</label>
+        <label className="block text-sm font-medium mb-2">Genre</label>
+        <div className='grid grid-cols-3 gap-2 mb-6'>
+          {genreValue.map((curr) => (
+            <button
+            key={curr.name}
+            type='button'
+            onClick={() => setGenre(curr.name)}
+            className={`rounded-lg flex justify-center items-center ${
+                genre === curr.name ? 'ring-2 ring-purple-500' : 'border-4'
+              } ${curr.name}`}
+            >
+              {curr.name}
+            </button>
+          ))}
+        </div>
+
+        <label className="block text-sm font-medium">Description (Optional)</label>
         <textarea
           placeholder="What do you want to learn from this video?"
           className="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-300 resize-none mb-4"
           rows={3}
-          value={notes}
-          onChange={(e) => setNotes(e.target.value)}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
+
+        
 
         <div className="flex justify-end gap-3">
           <button

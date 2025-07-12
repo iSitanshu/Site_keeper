@@ -25,8 +25,6 @@ const Playlist = () => {
   const user = useAppSelector(
     (state: { user: { user: User[] } }) => state.user.user[0]
   );
-  const playlistid = useAppSelector((state: any) => state.current.currentPlaylist)
-  console.log("Playlist ID - ", playlistid || '')
 
   const renderNewPlaylistForm = () => {
     dispatch(changeStatus());
