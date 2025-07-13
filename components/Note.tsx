@@ -161,3 +161,8 @@ const CurrentContent = () => {
 };
 
 export default CurrentContent;
+
+// Cloud Name - dpkeqjyxw
+// API Key - 597895782421375
+// API Secret - SyvGt22PWBmBcEUv_QkSSiBbZqg
+// API Env variable - CLOUDINARY_URL=cloudinary://<your_api_key>:<your_api_secret>@dpkeqjyxw
