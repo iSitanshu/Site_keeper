@@ -97,6 +97,8 @@ const HandlePhoto = () => {
         </div>
       </div>
 
+      {renderPhotos  && (<div>Hwllo !</div>)}  
+      {/* Fixed bottom section */}
       {/* Scrollable content area */}
       {/* {renderPhotos && (
         <div className="flex-1 overflow-y-auto px-6 pb-6">
