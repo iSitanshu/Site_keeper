@@ -1,5 +1,5 @@
 import { useAppSelector } from "@/lib/hooks";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Cross, Upload } from "lucide-react"; // optional icon
 import { Button } from "./ui/button";
 
@@ -11,7 +11,31 @@ const HandlePhoto = () => {
   const [error, setError] = useState(null);
   const playlistId = useAppSelector((state) => state.current.currentPlaylist);
   const linkId = useAppSelector((state) => state.current.currentLink);
-  const [currentPhotos, setCurrentPhotos] = useState([])
+  const [currentPhotos, setCurrentPhotos] = useState<string[]>([]);
+
+  // console.log("CUrrent photos in the page - ", currentPhotos);
+
+  useEffect(() => {
+    if (!playlistId || !linkId) return;
+
+    const fetchPhotos = async () => {
+      try {
+        const response = await fetch(`/api/dashboard/note?linkId=${linkId}`);
+        const body = await response.json();
+        if (body.notes.length !== 0) {
+          console.log("yeh aarahi ahi url emin",body.notes[0].imageUrl,"ans");
+          setCurrentPhotos(body.notes[0].imageUrl);
+        } else {
+          setCurrentPhotos([]);
+        }
+      } catch (error) {
+        console.error("Error fetching Notes:", error);
+        alert("Failed to fetch Notes. Please try again.");
+      }
+    };
+
+    fetchPhotos();
+  }, [linkId, playlistId]);
 
   const handleFileChange = (event: any) => {
     setSelectedFile(event.target.files[0]);
@@ -20,38 +44,41 @@ const HandlePhoto = () => {
   };
 
   const handleUpload = async () => {
-    if(!selectedFile){
+    if (!selectedFile) {
       alert("Please select an image first!");
       return;
     }
 
     setLoading(true);
+
     const formData = new FormData();
-    formData.append('image',selectedFile);
+    formData.append("image", selectedFile);
+    formData.append("linkId", linkId);
 
     try {
-      const response = await fetch('/api/cloudinary/upload', {
-        method: 'POST',
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+      const response = await fetch("/api/cloudinary", {
+        method: "POST",
         body: formData,
-      })
-
-      if(!response.ok){
-        alert("Something went wrong while uploading...")
-        console.error("data.error while uploading file || Something went wrong");
+      });
+      console.log(response);
+      if (!response.ok) {
+        alert("Something went wrong while uploading...");
+        console.error(
+          "data.error while uploading file || Something went wrong"
+        );
       }
 
       const data = await response.json();
-      console.log(data);
-      
+      if (response.ok && data.notes?.imageUrl) {
+        setCurrentPhotos([data.notes.imageUrl]);
+        setSelectedFile(null);
+      }
     } catch (error) {
-      console.error("Error in fetch in uploading")
+      console.error("Error in fetch in uploading");
     } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <div className="h-[90vh] w-full flex flex-col border-2 border-gray-200 rounded-xl shadow-md bg-white overflow-hidden">
@@ -65,10 +92,7 @@ const HandlePhoto = () => {
           {selectedFile ? (
             <div className="flex">
               {selectedFile.name}
-              {/* <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" className="text-red-600 lucide lucide-x-icon lucide-x" onClick={() => setSelectedFile(null)}><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> */}
-              <Button
-              onClick={() => setSelectedFile(null)}
-              >x</Button>
+              <Button onClick={() => setSelectedFile(null)}>x</Button>
             </div>
           ) : (
             <div>
@@ -98,9 +122,8 @@ const HandlePhoto = () => {
         </div>
       </div>
 
-      {/* Fixed bottom section */}
       {/* Scrollable content area */}
-      {/* {renderPhotos && (
+      {currentPhotos && (
         <div className="flex-1 overflow-y-auto px-6 pb-6">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-2">
             {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
@@ -109,14 +132,12 @@ const HandlePhoto = () => {
                 className="bg-gray-100 p-3 rounded-md border border-gray-200 shadow-sm"
               >
                 <div className="w-full h-32 bg-gray-300 rounded mb-2"></div>
-                <p className="text-xs text-gray-500 text-center">
-                  Note {i}
-                </p>
+                <p className="text-xs text-gray-500 text-center">Note {i}</p>
               </div>
             ))}
           </div>
         </div>
-      )} */}
+      )}
     </div>
   );
 };
