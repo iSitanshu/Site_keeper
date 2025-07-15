@@ -11,6 +11,7 @@ const HandlePhoto = () => {
   const [error, setError] = useState(null);
   const playlistId = useAppSelector((state) => state.current.currentPlaylist);
   const linkId = useAppSelector((state) => state.current.currentLink);
+  const [currentPhotos, setCurrentPhotos] = useState([])
 
   const handleFileChange = (event: any) => {
     setSelectedFile(event.target.files[0]);
@@ -97,7 +98,6 @@ const HandlePhoto = () => {
         </div>
       </div>
 
-      {renderPhotos  && (<div>Hwllo !</div>)}  
       {/* Fixed bottom section */}
       {/* Scrollable content area */}
       {/* {renderPhotos && (
