@@ -1,56 +1,47 @@
 import { useAppSelector } from "@/lib/hooks";
 import React, { useEffect, useState } from "react";
-import { Cross, Upload } from "lucide-react"; // optional icon
+import { Upload, X } from "lucide-react";
 import { Button } from "./ui/button";
 
 const HandlePhoto = () => {
-  const [renderPhotos, setRenderPhotos] = useState(true);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [imageUrl, setImageUrl] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const playlistId = useAppSelector((state) => state.current.currentPlaylist);
-  const linkId = useAppSelector((state) => state.current.currentLink);
   const [currentPhotos, setCurrentPhotos] = useState<string[]>([]);
+  const [expandedNote, setExpandedNote] = useState<{
+    image: string;
+    index: number;
+  } | null>(null);
 
-  // console.log("CUrrent photos in the page - ", currentPhotos);
+  const linkId = useAppSelector((state) => state.current.currentLink);
 
   useEffect(() => {
-    if (!playlistId || !linkId) return;
+    if (!linkId) return;
 
     const fetchPhotos = async () => {
       try {
         const response = await fetch(`/api/dashboard/note?linkId=${linkId}`);
         const body = await response.json();
-        if (body.notes.length !== 0) {
-          console.log("yeh aarahi ahi url emin",body.notes[0].imageUrl,"ans");
+        if (body.notes.length !== 0 && body.notes[0].imageUrl?.length > 0) {
           setCurrentPhotos(body.notes[0].imageUrl);
-        } else {
-          setCurrentPhotos([]);
         }
       } catch (error) {
         console.error("Error fetching Notes:", error);
-        alert("Failed to fetch Notes. Please try again.");
       }
     };
 
     fetchPhotos();
-  }, [linkId, playlistId]);
+  }, [linkId]);
 
-  const handleFileChange = (event: any) => {
-    setSelectedFile(event.target.files[0]);
-    setImageUrl("");
-    setError(null);
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setSelectedFile(event.target.files[0]);
+    }
   };
 
   const handleUpload = async () => {
-    if (!selectedFile) {
-      alert("Please select an image first!");
-      return;
-    }
+    if (!selectedFile || !linkId) return;
 
     setLoading(true);
-
     const formData = new FormData();
     formData.append("image", selectedFile);
     formData.append("linkId", linkId);
@@ -60,81 +51,122 @@ const HandlePhoto = () => {
         method: "POST",
         body: formData,
       });
-      console.log(response);
-      if (!response.ok) {
-        alert("Something went wrong while uploading...");
-        console.error(
-          "data.error while uploading file || Something went wrong"
-        );
-      }
 
       const data = await response.json();
       if (response.ok && data.notes?.imageUrl) {
-        setCurrentPhotos([data.notes.imageUrl]);
+        setCurrentPhotos(data.notes.imageUrl);
         setSelectedFile(null);
       }
     } catch (error) {
-      console.error("Error in fetch in uploading");
+      console.error("Error uploading image", error);
     } finally {
       setLoading(false);
     }
   };
 
-  return (
-    <div className="h-[90vh] w-full flex flex-col border-2 border-gray-200 rounded-xl shadow-md bg-white overflow-hidden">
-      {/* Fixed top section */}
-      <div className="p-6">
-        <h1 className="text-2xl font-semibold mb-4 flex items-center gap-2">
-          📊 Handwritten Notes
-        </h1>
+  const openNoteDetail = (image: string, index: number) => {
+    setExpandedNote({ image, index });
+  };
 
-        <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center flex flex-col items-center justify-center gap-2">
-          {selectedFile ? (
-            <div className="flex">
-              {selectedFile.name}
-              <Button onClick={() => setSelectedFile(null)}>x</Button>
-            </div>
-          ) : (
-            <div>
-              <Upload className="w-8 h-8 text-gray-500" />
-              <p className="text-gray-700 text-sm mb-2">
-                Upload photos of your handwritten notes
-              </p>
-            </div>
-          )}
-          <label className="cursor-pointer px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm transition">
-            Choose File
+  const closeNoteDetail = () => {
+    setExpandedNote(null);
+  };
+
+  return (
+    <div className="w-full p-6 bg-white rounded-lg shadow-sm border border-gray-200">
+      <h1 className="text-2xl font-semibold mb-6">Handwritten Notes</h1>
+
+      {/* Upload Section */}
+      <div className="mb-6">
+        <div className="flex flex-col items-center justify-center gap-4 p-6 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
+          <Upload className="w-8 h-8 text-gray-500" />
+          <p className="text-gray-600 text-sm">
+            Upload photos of your handwritten notes
+          </p>
+          
+          <label className="cursor-pointer">
+            <span className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 text-sm transition">
+              Choose File
+            </span>
             <input
               type="file"
-              hidden
-              multiple
-              onChange={handleFileChange}
+              className="hidden"
               accept="image/*"
+              onChange={handleFileChange}
             />
           </label>
-          {selectedFile && <Button onClick={handleUpload}>Add</Button>}
-          <button
-            className="text-blue-500 underline text-xs mt-2"
-            onClick={() => setRenderPhotos(!renderPhotos)}
-          >
-            {renderPhotos ? "Hide Uploaded Photos" : "Show Uploaded Photos"}
-          </button>
         </div>
+
+        {selectedFile && (
+          <div className="mt-4 flex items-center gap-4">
+            <p className="text-sm text-gray-700">{selectedFile.name}</p>
+            <Button
+              onClick={handleUpload}
+              disabled={loading}
+              size="sm"
+              className="ml-auto"
+            >
+              {loading ? "Uploading..." : "Upload"}
+            </Button>
+          </div>
+        )}
       </div>
 
-      {/* Scrollable content area */}
-      {currentPhotos && (
-        <div className="flex-1 overflow-y-auto px-6 pb-6">
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-2">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-              <div
-                key={i}
-                className="bg-gray-100 p-3 rounded-md border border-gray-200 shadow-sm"
-              >
-                <div className="w-full h-32 bg-gray-300 rounded mb-2"></div>
-                <p className="text-xs text-gray-500 text-center">Note {i}</p>
+      {/* Notes List */}
+      <div className="space-y-4">
+        {currentPhotos.length > 0 && (
+          <>
+            <div className="grid grid-cols-2 gap-4">
+              {currentPhotos.map((photo, idx) => (
+                <div 
+                  key={idx} 
+                  className="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
+                  onClick={() => openNoteDetail(photo, idx)}
+                >
+                  <img
+                    src={photo}
+                    alt={`Note ${idx + 1}`}
+                    className="w-full h-auto object-contain mb-2"
+                  />
+                  <p className="text-sm font-medium">Study Notes - Page {idx + 1}</p>
+                  <p className="text-xs text-gray-500">
+                    {new Date().toLocaleDateString()}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Expanded Note Modal */}
+      {expandedNote && (
+        <div className="fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg shadow-lg relative max-w-4xl w-full max-h-[90vh] overflow-auto">
+            <div className="sticky top-0 bg-white p-4 border-b flex justify-between items-center">
+              <div>
+                <h2 className="text-lg font-semibold">
+                  Learning Summary
+                </h2>
+                <p className="text-sm text-gray-500">
+                  Uploaded on {new Date().toLocaleDateString()}
+                </p>
               </div>
-            ))}
+              <button 
+                onClick={closeNoteDetail}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="p-6">
+              <img
+                src={expandedNote.image}
+                alt="Expanded note"
+                className="w-full h-auto object-contain rounded-lg mb-6"
+              />
+            </div>
           </div>
         </div>
       )}
