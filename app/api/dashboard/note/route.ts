@@ -70,6 +70,7 @@ export async function GET(request: NextRequest) {
         linkId: linkId,
       },
     });
+    console.log("Notes get",notes)
 
     return NextResponse.json(
       { message: "Notes related to the link", notes: notes },

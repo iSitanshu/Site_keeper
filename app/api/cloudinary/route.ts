@@ -14,6 +14,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "No image uploaded" }, { status: 400 });
     }
 
+    if (!linkId) {
+      return NextResponse.json({ error: "Select a Link" }, { status: 401 });
+    }
+
     const buffer = Buffer.from(await file.arrayBuffer());
 
     const uploaded: UploadApiResponse = await new Promise((resolve, reject) => {
@@ -27,44 +31,58 @@ export async function POST(req: NextRequest) {
       streamifier.createReadStream(buffer).pipe(uploadStream);
     });
 
-    if (uploaded.url) {
-      if (!linkId)
-        return NextResponse.json({ error: "Select a Link" }, { status: 401 });
-
-      const existingLink = await prisma.link.findUnique({
-        where: {
-          id: linkId,
-        },
-      });
-
-      if (!existingLink)
-        return NextResponse.json({ error: "Select any Link" }, { status: 401 });
-
-      const existingNote = await prisma.note.findFirst({
-        where: {
-          linkId: linkId,
-        },
-      });
-
-      if (existingNote) {
-        const updatedImageUrls = [...(existingNote?.imageUrl ?? []), uploaded.url];
-
-        const updatedNotes = await prisma.note.update({
-          where: { id: existingNote.id },
-          data: {
-            imageUrl: updatedImageUrls,
-          },
-        });
-
-        return NextResponse.json(
-          { message: "Your Messages", notes: updatedNotes },
-          { status: 201 }
-        );
-      }
+    if (!uploaded.url) {
+      return NextResponse.json(
+        { error: "Cloudinary upload failed" },
+        { status: 500 }
+      );
     }
-    return NextResponse.json(uploaded);
+
+    const existingLink = await prisma.link.findUnique({
+      where: { id: linkId },
+    });
+
+    if (!existingLink) {
+      return NextResponse.json({ error: "Invalid Link" }, { status: 401 });
+    }
+
+    const existingNote = await prisma.note.findFirst({
+      where: { linkId },
+    });
+
+    if (existingNote) {
+      const currentUrls = Array.isArray(existingNote.imageUrl)
+        ? existingNote.imageUrl
+        : [];
+
+      const updatedImageUrls: string[] = [...currentUrls, uploaded.url];
+
+      const updatedNote = await prisma.note.update({
+        where: { id: existingNote.id },
+        data: {
+          imageUrl: updatedImageUrls,
+        },
+      });
+
+      return NextResponse.json(
+        { message: "Image added to existing note", notes: updatedNote },
+        { status: 201 }
+      );
+    }
+
+    const newNote = await prisma.note.create({
+      data: {
+        linkId,
+        imageUrl: [uploaded.url],
+      },
+    });
+
+    return NextResponse.json(
+      { message: "New note created with image", notes: newNote },
+      { status: 201 }
+    );
   } catch (err) {
-    console.error("Cloudinary upload error:", err);
+    console.error("Upload error:", err);
     return NextResponse.json({ error: "Image upload failed" }, { status: 500 });
   }
 }
