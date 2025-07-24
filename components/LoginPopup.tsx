@@ -1,9 +1,9 @@
 "use client";
-import { addUser } from "@/lib/features/user/userSlice";
-import { useAppDispatch } from "@/lib/hooks";
 import { signIn } from "next-auth/react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { useContext, useEffect, useState } from "react";
+import React, { ReactNode, useState } from "react";
+
 
 const LoginPopup = () => {
   const [currState, setCurrState] = useState("Sign Up");
@@ -13,8 +13,6 @@ const LoginPopup = () => {
     email: "",
     password: "",
   });
-  const dispatch = useAppDispatch();
-
   const handleSubmit = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
     if (currState === "Sign Up") {
@@ -25,7 +23,7 @@ const LoginPopup = () => {
         },
         body: JSON.stringify(userRegister),
       });
-      const body = await res.json();
+      await res.json();
       if (!res.ok) {
         console.error("data.error while registering || Something went wrong");
       } else {
@@ -58,7 +56,7 @@ const LoginPopup = () => {
   };
 
   return (
-    <div className="inset-0 flex flex-col gap-6 items-center justify-center bg-gray-900 bg-opacity-60 z-50">
+    <div className="fixed inset-0 flex flex-col gap-6 items-center justify-center bg-gray-900 bg-opacity-60 z-50">
       <form
         className="bg-white w-[90%] sm:w-[400px] p-6 rounded-2xl shadow-xl relative"
         onSubmit={handleSubmit}
@@ -66,7 +64,7 @@ const LoginPopup = () => {
         {/* Title and Close */}
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold text-gray-800">{currState}</h2>
-          <img
+          <Image
             src="https://png.pngtree.com/png-vector/20190411/ourmid/pngtree-vector-cross-icon-png-image_925896.jpg"
             alt="Close"
             className="w-5 h-5 cursor-pointer hover:scale-110 transition-transform duration-200"
@@ -162,6 +160,3 @@ const LoginPopup = () => {
 };
 
 export default LoginPopup;
-function preventDefault() {
-  throw new Error("Function not implemented.");
-}
