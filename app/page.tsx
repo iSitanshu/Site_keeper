@@ -2,7 +2,7 @@
 import Note from "@/components/Note";
 import Playlist from "@/components/Playlist";
 import Link from "@/components/Link";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
+import { useAppDispatch } from "@/lib/hooks";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
