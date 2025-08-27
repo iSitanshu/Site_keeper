@@ -2,7 +2,8 @@
 import { signIn } from "next-auth/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React, { ReactNode, useState } from "react";
+import React, { useState } from "react";
+import crossimage from '@/image/cross.png'
 
 
 const LoginPopup = () => {
@@ -51,7 +52,7 @@ const LoginPopup = () => {
     if (currState === "Login") setCurrState("Sign Up");
   };
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUserRegister({ ...userRegister, [e.target.name]: e.target.value });
   };
 
@@ -65,7 +66,7 @@ const LoginPopup = () => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-semibold text-gray-800">{currState}</h2>
           <Image
-            src="https://png.pngtree.com/png-vector/20190411/ourmid/pngtree-vector-cross-icon-png-image_925896.jpg"
+            src={crossimage}
             alt="Close"
             className="w-5 h-5 cursor-pointer hover:scale-110 transition-transform duration-200"
           />

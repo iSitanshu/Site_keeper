@@ -10,7 +10,7 @@ interface User {
 const NavbarComponent = () => {
   const user = useAppSelector((state: { user: { user: User[] } }) => state.user.user[0])
   return (
-    <div className="flex items-center justify-between p-2 bg-white shadow">
+    <div className="flex items-center justify-between p-2 bg-fuchsia-200 shadow">
       <div className="flex items-center ml-2">
         <img 
           src="./Logo.jpeg" 
