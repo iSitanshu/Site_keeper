@@ -1,14 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { useAppSelector } from "@/lib/hooks";
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "./ui/button";
 import EditNotesPhoto from "./EditNotesPhoto";
 import HandlePhoto from "./HandlePhoto";
+
+type LinkData = {
+  id: string;
+  customTitle: string;
+  customDescription?: string;
+  createdAt: string;
+  aiTags?: string[];
+  genre?: string;
+  url: string;
+  duration?: string;
+  originalTitle?: string;
+  themeColor?: string;
+  tags?: string[];
+  // Add other fields as needed
+};
 
 const CurrentContent = () => {
   const currentPlaylist = useAppSelector((state) => state.current.currentPlaylist);
   const currentLinkId = useAppSelector((state) => state.current.currentLink);
-  const [linkData, setLinkData] = useState<any | null>(null);
+  const [linkData, setLinkData] = useState<LinkData | null>(null);
 
   useEffect(() => {
     if (!currentPlaylist || !currentLinkId) return setLinkData(null);
@@ -17,7 +30,7 @@ const CurrentContent = () => {
       try {
         const res = await fetch(`/api/dashboard/link?playlistId=${currentPlaylist}`);
         const allLinks = await res.json();
-        const matched = allLinks.find((link: any) => link.id === currentLinkId);
+        const matched = (allLinks as LinkData[]).find((link) => link.id === currentLinkId);
         setLinkData(matched || null);
       } catch (error) {
         console.error("Failed to load current link", error);

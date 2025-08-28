@@ -2,6 +2,7 @@ import { useAppSelector } from "@/lib/hooks";
 import React, { useEffect, useState } from "react";
 import { Upload, X } from "lucide-react";
 import { Button } from "./ui/button";
+import Image from "next/image";
 
 const HandlePhoto = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -123,11 +124,8 @@ const HandlePhoto = () => {
                   className="border rounded-md p-3 cursor-pointer hover:bg-gray-50 transition"
                   onClick={() => openNoteDetail(photo, idx)}
                 >
-                  <img
-                    src={photo}
-                    alt={`Note ${idx + 1}`}
-                    className="w-full h-auto object-contain mb-2"
-                  />
+                  <Image src={photo} alt={`Note ${idx + 1}`}
+                    className="w-full h-auto object-contain mb-2"/>
                   <p className="text-sm font-medium">Study Notes - Page {idx + 1}</p>
                   <p className="text-xs text-gray-500">
                     {new Date().toLocaleDateString()}
@@ -161,7 +159,7 @@ const HandlePhoto = () => {
             </div>
 
             <div className="p-6">
-              <img
+              <Image
                 src={expandedNote.image}
                 alt="Expanded note"
                 className="w-full h-auto object-contain rounded-lg mb-6"

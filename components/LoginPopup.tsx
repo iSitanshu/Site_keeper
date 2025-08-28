@@ -57,7 +57,7 @@ const LoginPopup = () => {
   };
 
   return (
-    <div className="fixed inset-0 flex flex-col gap-6 items-center justify-center bg-gray-900 bg-opacity-60 z-50">
+    <div className="fixed inset-0 flex flex-col gap-6 items-center justify-center bg-purple-700 bg-opacity-60 z-50">
       <form
         className="bg-white w-[90%] sm:w-[400px] p-6 rounded-2xl shadow-xl relative"
         onSubmit={handleSubmit}
@@ -111,10 +111,10 @@ const LoginPopup = () => {
         </button>
 
         {/* Terms and Conditions */}
-        {/* <div className="flex items-start mt-4 gap-2 text-sm text-gray-600">
+        <div className="flex items-start mt-4 gap-2 text-sm text-gray-600">
           <input type="checkbox" required className="mt-1" />
           <p>By continuing, I agree to the terms of use & privacy policy.</p>
-        </div> */}
+        </div>
 
         {/* Switch Auth Mode */}
         <p className="mt-4 text-sm text-center text-gray-700">

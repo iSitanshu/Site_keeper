@@ -1,7 +1,6 @@
 import { changeStatus } from '@/lib/features/status/statusSlice';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import axios from "axios";
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 
 interface User {
   id?: string
@@ -24,7 +23,6 @@ const selectTags = [
 
 const PlaylistForm = () => {
   const [playlistName, setPlaylistName] = useState('');
-  const [PlaylistData, setPlaylistData] = useState([])
   const [description, setDescription] = useState('');
   const [selectedColor, setSelectedColor] = useState('Primary');
   const [tags, setTags] = useState('Learning')
@@ -55,7 +53,7 @@ const PlaylistForm = () => {
         },
         body: JSON.stringify(payload),
       });
-      const body = await res.json();
+      await res.json();
       if (!res.ok) {
         console.error("data.error while registering || Something went wrong");
       } else {

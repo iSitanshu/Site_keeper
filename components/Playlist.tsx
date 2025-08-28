@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 import PlaylistForm from "./PlaylistForm";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { changeStatus } from "@/lib/features/status/statusSlice";
-import { changeCurrentPlaylist, changeCurrentLink, changeCurrentNote } from "@/lib/features/current/currentSlice"
+import { changeCurrentPlaylist } from "@/lib/features/current/currentSlice"
 
 interface User {
   id?: string;

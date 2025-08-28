@@ -4,6 +4,18 @@ import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 import { changeLinkStatus } from "@/lib/features/status/statusSlice";
 import LinkForm from "./LinkForm";
 import { changeCurrentLink } from "@/lib/features/current/currentSlice";
+import Image from "next/image";
+
+interface Link {
+  id: string;
+  url: string;
+  customTitle: string;
+  createdAt: string;
+  aiTags?: string[];
+  genre?: string;
+  customDescription?: string;
+}
+
 
 const LinkComponent = () => {
   const linkStatus = useAppSelector((state) => state.status.linkStatus);
@@ -11,7 +23,7 @@ const LinkComponent = () => {
     (state) => state.current.currentPlaylist
   );
   const dispatch = useAppDispatch();
-  const [linkData, setLinkData] = useState([]);
+  const [linkData, setLinkData] = useState<Link[]>([]);
   const [selectedLinkId, setSelectedLinkId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -37,7 +49,7 @@ const LinkComponent = () => {
     dispatch(changeLinkStatus());
   };
 
-  const filteredLinks = linkData.filter((link: any) =>
+  const filteredLinks = linkData.filter((link) =>
     link.customTitle.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
@@ -100,7 +112,7 @@ const LinkComponent = () => {
 
         {/* Links List */}
         <div className="flex flex-col gap-3">
-          {filteredLinks.map((link: any) => (
+          {filteredLinks.map((link) => (
             <div
               key={link.id}
               onClick={() => {
@@ -118,13 +130,14 @@ const LinkComponent = () => {
                 {/* Thumbnail or icon */}
                 <div className="w-24 h-16 bg-gray-200 flex items-center justify-center text-gray-600 font-bold rounded-md overflow-hidden">
                   {link.url.includes("youtube.com") ? (
-                    <img
-                      src={`https://img.youtube.com/vi/${new URL(
+                    // <img
+                    //   src=
+                    //   alt="video"
+                    //   className="w-full h-full object-cover"
+                    // />
+                    <Image src={`https://img.youtube.com/vi/${new URL(
                         link.url
-                      ).searchParams.get("v")}/0.jpg`}
-                      alt="video"
-                      className="w-full h-full object-cover"
-                    />
+                      ).searchParams.get("v")}/0.jpg`} alt="" className="w-full h-full object-cover" />
                   ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

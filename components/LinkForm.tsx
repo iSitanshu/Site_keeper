@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/lib/hooks';
-import { changeLinkStatus, changeStatus } from '@/lib/features/status/statusSlice';
+import { changeLinkStatus } from '@/lib/features/status/statusSlice';
 
 const genreValue = [
   {name: 'Youtube'},
@@ -49,7 +49,7 @@ const LinkForm = () => {
         },
         body: JSON.stringify(data),
       });
-      const body = await res.json();
+      await res.json();
       if (!res.ok) {
         console.error("data.error while add links || Something went wrong");
       } else {
