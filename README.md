@@ -18,14 +18,21 @@ A **personalized content manager** built with **Next.js, Prisma, and Redux** whe
 
 ## 🖼️ Screenshots
 
-### 🔹 We can add links/website
-![Link](./image/sidekeeper.png)
+### 🔹 Handwritten & YouTube
+Handwritten notes for studying alongside YouTube video references.  
+| Handwritten | YouTube |
+|-------------|---------|
+| ![Handwritten](./image/handwritten.png) | ![YouTube](./image/youtube.png) |
 
-### 🔹 we can add youtube videos 
-![Youtube](./image/youtube.png)
+### 🔹 Notes & Links
+Expand and manage notes, and keep track of useful links/websites.  
+| Notes | Sidekeeper |
+|-------|------------|
+| ![Notes](./image/notes.png) | ![Sidekeeper](./image/sidekeeper.png) |
 
-### 🔹 we can add notes 
-![Notes](./image/image.png)
+### 🔹 Songs
+Add song-related content/images.  
+![Songs](./image/Songs.png)
 
 ---
 
