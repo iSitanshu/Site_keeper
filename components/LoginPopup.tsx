@@ -5,6 +5,11 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import crossimage from '@/image/cross.png'
 
+type UserType = {
+  name: string;
+  email: string;
+  password: string;
+};
 
 const LoginPopup = () => {
   const [currState, setCurrState] = useState("Sign Up");
@@ -156,21 +161,18 @@ const LoginPopup = () => {
           <button onClick={logOut}>Log out</button>
         </div>
       )} */}
-      {/* Demo Credentials Component */}
-<div className="bg-white w-[90%] sm:w-[400px] p-4 rounded-xl shadow-md text-center">
-  <p className="text-sm font-semibold text-gray-700 mb-2">
-    Demo Login
-  </p>
-
-  <div className="text-sm text-gray-800">
-    <p>
-      <span className="font-medium">Email:</span> 2@2.com
-    </p>
-    <p>
-      <span className="font-medium">Password:</span> 123456789
-    </p>
-  </div>
-</div>
+      {/* Demo Credentials */}
+      <div className="bg-white w-[90%] sm:w-[400px] p-4 rounded-xl shadow-md text-center">
+        <p className="text-sm font-semibold text-gray-700 mb-2">
+          Demo Login
+        </p>
+        <p className="text-sm text-gray-800">
+          <span className="font-medium">Email:</span> 2@2.com
+        </p>
+        <p className="text-sm text-gray-800">
+          <span className="font-medium">Password:</span> 123456789
+        </p>
+      </div>
     </div>
   );
 };
