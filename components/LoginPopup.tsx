@@ -5,12 +5,6 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import crossimage from '@/image/cross.png'
 
-type UserType = {
-  name: string;
-  email: string;
-  password: string;
-};
-
 const LoginPopup = () => {
   const [currState, setCurrState] = useState("Sign Up");
   const router = useRouter();
