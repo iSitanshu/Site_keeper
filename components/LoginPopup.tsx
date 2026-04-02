@@ -156,6 +156,18 @@ const LoginPopup = () => {
           <button onClick={logOut}>Log out</button>
         </div>
       )} */}
+      {/* Demo Credentials Box */}
+<div className="bg-white w-[90%] sm:w-[400px] p-4 rounded-xl shadow-md text-center">
+  <p className="text-sm text-gray-600 mb-1 font-medium">
+    Demo Login Credentials
+  </p>
+  <p className="text-sm text-gray-800">
+    <span className="font-semibold">Email:</span> 2@2.com
+  </p>
+  <p className="text-sm text-gray-800">
+    <span className="font-semibold">Password:</span> 123456789
+  </p>
+</div>
     </div>
   );
 };
