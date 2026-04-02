@@ -1,7 +1,5 @@
 import type { NextConfig } from "next";
 
-import type { NextConfig } from "next";
-
 // Workaround for Node environments where globalThis.localStorage exists as an empty object
 // (e.g. some new runtimes or shims) and does not implement getItem/setItem.
 if (typeof globalThis !== "undefined") {
