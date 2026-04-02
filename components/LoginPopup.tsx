@@ -156,17 +156,20 @@ const LoginPopup = () => {
           <button onClick={logOut}>Log out</button>
         </div>
       )} */}
-      {/* Demo Credentials Box */}
+      {/* Demo Credentials Component */}
 <div className="bg-white w-[90%] sm:w-[400px] p-4 rounded-xl shadow-md text-center">
-  <p className="text-sm text-gray-600 mb-1 font-medium">
-    Demo Login Credentials
+  <p className="text-sm font-semibold text-gray-700 mb-2">
+    Demo Login
   </p>
-  <p className="text-sm text-gray-800">
-    <span className="font-semibold">Email:</span> 2@2.com
-  </p>
-  <p className="text-sm text-gray-800">
-    <span className="font-semibold">Password:</span> 123456789
-  </p>
+
+  <div className="text-sm text-gray-800">
+    <p>
+      <span className="font-medium">Email:</span> 2@2.com
+    </p>
+    <p>
+      <span className="font-medium">Password:</span> 123456789
+    </p>
+  </div>
 </div>
     </div>
   );
