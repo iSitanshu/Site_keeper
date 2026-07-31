@@ -1,4 +1,4 @@
-# 📂 SideKEEPER  
+# 📂 SideKEEPER   
 
 A **personalized content manager** built with **Next.js, Prisma, and Redux** where users can create playlists, add YouTube videos, websites, and handwritten notes, and organize learning resources in one place.  
 
